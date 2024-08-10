@@ -12,8 +12,8 @@ from handlers.review_dialog import review_router
 async def main():
     await set_bot_commands()
     dp.include_routers(start_router, myinfo_router,
-                       recipe_router, dishes_router,
-                       review_router)
+                       recipe_router, review_router,
+                       dishes_router)
     await dp.start_polling(bot)
 
 
