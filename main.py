@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from bot_config import dp, bot, set_bot_commands
+from bot_config import dp, bot, set_bot_commands, database
 
 from handlers.start import start_router
 from handlers.myinfo import myinfo_router
@@ -9,11 +9,18 @@ from handlers.dishes import dishes_router
 from handlers.review_dialog import review_router
 
 
+async def on_startup():
+    print('Бот запущен')
+    database.create_tables()
+
+
 async def main():
     await set_bot_commands()
     dp.include_routers(start_router, myinfo_router,
-                       recipe_router, dishes_router,
-                       review_router)
+                       recipe_router, review_router,
+                       dishes_router)
+
+    dp.startup.register(on_startup)
     await dp.start_polling(bot)
 
 
