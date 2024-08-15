@@ -19,8 +19,11 @@ async def main():
     dp.include_routers(start_router, myinfo_router,
                        recipe_router, review_router,
                        dishes_router)
+<<<<<<< HEAD
 
     dp.startup.register(on_startup)
+=======
+>>>>>>> 0d66e6f0ab79e60c301b228f8e334d8d30d55f1f
     await dp.start_polling(bot)
 
 
