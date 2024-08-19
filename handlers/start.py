@@ -1,5 +1,6 @@
 from aiogram import Router, types, F
 from aiogram.filters.command import Command
+from keyboards import start_keyboard, vacancies_keyboard
 
 
 start_router = Router()
@@ -7,26 +8,8 @@ start_router = Router()
 
 @start_router.message(Command('start'))
 async def start_handler(message: types.Message):
-    kb = types.InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                types.InlineKeyboardButton(text='О ресторане', callback_data='about_us')
-            ],
-            [
-                types.InlineKeyboardButton(text='Наш инстаграм', url='https://instagram.com/cyclone.bishkek'),
-                types.InlineKeyboardButton(text='Наш сайт', url='https://cyclone.kg')
-            ],
-            [
-                types.InlineKeyboardButton(text='Наш адрес и контакты', callback_data='info'),
-            ],
-            [
-                types.InlineKeyboardButton(text='Вакансии', callback_data='vacancies'),
-                types.InlineKeyboardButton(text='Оставить отзыв', callback_data='feedback')
-             ]
-        ]
-    )
     await message.answer('Здравствуйте, я бот ресторана итальянской кухни Cyclone! '
-                         'Чем я могу вам помочь?', reply_markup=kb)
+                         'Чем я могу вам помочь?', reply_markup=start_keyboard())
 
 
 @start_router.callback_query(F.data == 'about_us')
@@ -45,20 +28,7 @@ async def info_handler(callback: types.CallbackQuery):
 
 @start_router.callback_query(F.data == 'vacancies')
 async def vacancies_handler(callback: types.CallbackQuery):
-    kb = types.InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                types.InlineKeyboardButton(text='Обслуживающий персонал', callback_data='serving')
-            ],
-            [
-                types.InlineKeyboardButton(text='Кухня', callback_data='kitchen')
-            ],
-            [
-                types.InlineKeyboardButton(text='Администрация', callback_data='management')
-            ]
-        ]
-    )
-    await callback.message.answer('Выберите интересующую вас должность', reply_markup=kb)
+    await callback.message.answer('Выберите интересующую вас должность', reply_markup=vacancies_keyboard())
 
 
 @start_router.callback_query(F.data == 'serving')

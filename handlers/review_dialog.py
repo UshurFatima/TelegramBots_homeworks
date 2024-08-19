@@ -1,8 +1,9 @@
 from aiogram import Router, types, F
+from aiogram.filters.command import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from bot_config import database
-
+from keyboards import rating_keyboard
 
 review_router = Router()
 
@@ -19,7 +20,16 @@ class RestaurantReview(StatesGroup):
 @review_router.callback_query(F.data == 'feedback')
 async def give_review(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(RestaurantReview.name)
+    await callback.message.answer('Здравствуйте! Вы решили дать отзыв нашему ресторану. '
+                                  'Вы можете выйти написав "стоп"')
     await callback.message.answer('Как вас зовут?')
+
+
+@review_router.message(Command('stop'))
+@review_router.message(F.text == 'стоп')
+async def stop_review(message: types.Message, state: FSMContext):
+    await state.clear()
+    await message.answer('Добавление отзыва остановлено')
 
 
 @review_router.message(RestaurantReview.name)
@@ -41,27 +51,7 @@ async def process_number(message: types.Message, state: FSMContext):
 async def process_date(message: types.Message, state: FSMContext):
     await state.update_data(visit_date=message.text)
     await state.set_state(RestaurantReview.food_rating)
-    kb = types.ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                types.KeyboardButton(text='Плохо')
-            ],
-            [
-                types.KeyboardButton(text='Неудовлетворительно')
-            ],
-            [
-                types.KeyboardButton(text='Удовлетворительно')
-            ],
-            [
-                types.KeyboardButton(text='Хорошо')
-            ],
-            [
-                types.KeyboardButton(text='Отлично')
-            ]
-        ],
-        resize_keyboard=True
-    )
-    await message.answer('Как бы вы оценили наши блюда?', reply_markup=kb)
+    await message.answer('Как бы вы оценили наши блюда?', reply_markup=rating_keyboard())
 
 
 @review_router.message(RestaurantReview.food_rating)
@@ -80,16 +70,6 @@ async def process_food_rating(message: types.Message, state: FSMContext):
     else:
         await message.answer('Пожалуйста, вводите только предложенные слова')
         return
-
-    # if not food.isnumeric():
-    #     await message.answer('Вводите только числа')
-    #     return
-    #
-    # food = int(food)
-    # if 5 < food or food < 1:
-    #     await message.answer('Вводите числа от 1 до 5')
-    #     return
-
     await state.update_data(food_rating=food)
     await state.set_state(RestaurantReview.cleanliness_rating)
     await message.answer('Как бы вы оценили чистоту нашего ресторана?')
@@ -146,5 +126,7 @@ async def process_comments(message: types.Message, state: FSMContext):
                          data.get('cleanliness_rating'),
                          data.get('comments')
                      ))
+    average_rating = database.fetch('''SELECT round(avg(food_rating), 1) from reviews''')
+    await message.answer(f'Средняя оценка блюд нашего заведения {average_rating[1]}')
 
     await state.clear()
