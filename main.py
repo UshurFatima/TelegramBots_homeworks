@@ -2,11 +2,10 @@ import asyncio
 import logging
 from bot_config import dp, bot, set_bot_commands, database
 
-from handlers.start import start_router
-from handlers.myinfo import myinfo_router
-from handlers.random_recipe import recipe_router
-from handlers.dishes import dishes_router
-from handlers.review_dialog import review_router
+from handlers import (
+    group_router,
+    private_router
+)
 
 
 async def on_startup():
@@ -16,9 +15,7 @@ async def on_startup():
 
 async def main():
     await set_bot_commands()
-    dp.include_routers(start_router, myinfo_router,
-                       recipe_router, review_router,
-                       dishes_router)
+    dp.include_routers(private_router, group_router)
 
     dp.startup.register(on_startup)
     await dp.start_polling(bot)

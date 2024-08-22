@@ -60,3 +60,14 @@ class Queries:
     ('Лимонад ананас-манго', 250, 'menu_images/анман.jpg', 5),
     ('Лимонад цитрус-базилик', 200, 'menu_images/цитбаз.jpg', 5)
     '''
+
+    DROP_WARNINGS_TABLE = '''
+    DROP TABLE IF EXISTS warnings
+    '''
+
+    CREATE_WARNINGS_TABLE = '''
+    CREATE TABLE IF NOT EXISTS warnings (
+    user_id INTEGER PRIMARY KEY,
+    counter INTEGER DEFAULT 0
+    )
+    '''
