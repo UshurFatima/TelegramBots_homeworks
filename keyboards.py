@@ -59,6 +59,9 @@ def start_keyboard():
             [
                 InlineKeyboardButton(text='Вакансии', callback_data='vacancies'),
                 InlineKeyboardButton(text='Оставить отзыв', callback_data='feedback')
+            ],
+            [
+                InlineKeyboardButton(text='Аренда квартир и частных домов', callback_data='houses'),
             ]
         ]
     )
