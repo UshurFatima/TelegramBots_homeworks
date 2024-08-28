@@ -35,6 +35,6 @@ async def categories_handler(message: types.Message):
     await message.answer(f'Блюда категории {category}: ', reply_markup=kb)
     for dish in menu:
         image = types.FSInputFile(dish.get('image'))
-        await message.answer_photo(photo=image, caption=
-        f'Название: {dish.get('name')}\n'
-        f'Цена: {dish.get('price')} сом')
+        await message.answer_photo(photo=image,
+                                   caption=f'Название: {dish.get("name")}. '
+                                           f'Цена: {dish.get("price")} сом')

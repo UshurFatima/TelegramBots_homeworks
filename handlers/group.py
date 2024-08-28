@@ -25,7 +25,7 @@ async def forbidden_words(message: types.Message):
                                      params=(message.from_user.id, ))
 
             await message.answer(f'{message.from_user.first_name} не ругайся, твое '
-                                 f'количество предупреждений достигло {to_return[0]['counter']} раз')
+                                 f'количество предупреждений достигло {to_return[0]["counter"]} раз')
 
             if to_return[0]['counter'] >= 10:
                 await bot.ban_chat_member(

@@ -1,0 +1,19 @@
+services:
+  sqlite:
+    container_name: my-sqlite-container
+    image: nouchka/sqlite3:latest
+    volumes:
+      - sqlite-data:/db
+
+  bot:
+    container_name: my-bot-container
+    build: .
+    command: python main.py
+    volumes:
+      - .:/app
+    depends_on:
+      - sqlite
+    restart: always
+
+volumes:
+  sqlite-data:
