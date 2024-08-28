@@ -1,12 +1,12 @@
 services:
   sqlite:
-    container_name: my-sqlite-container
+    container_name: sqlite-container
     image: nouchka/sqlite3:latest
     volumes:
       - sqlite-data:/db
 
   bot:
-    container_name: my-bot-container
+    container_name: homework-bot-container
     build: .
     command: python main.py
     volumes:
